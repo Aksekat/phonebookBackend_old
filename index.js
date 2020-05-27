@@ -23,10 +23,6 @@ const generateId = () => {
   return Math.ceil(Math.random() * 1000)
 }
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
-})
-
 app.get('/info', (req, res) => {
   const info = `<p>Phonebook has info for ${persons.length} people. <br><br>
   ${Date()}</p>`
