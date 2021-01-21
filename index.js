@@ -10,9 +10,9 @@ app.use(express.static('build'))
 app.use(cors())
 
 morgan.token('postData', function (req, res) {
-  if (req.method === "POST") { return JSON.stringify(req.body) }
+  if (req.method === 'POST') { return JSON.stringify(req.body) }
   else {
-    return " "
+    return ' '
   }
 })
 app.use(morgan(':method :url :status :res[content-length] :response-time ms :postData'))
@@ -45,10 +45,6 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  if (!body.name || !body.number) {
-    return response.status(400).send({ error: 'content missing' })
-  }
-
   const person = new Person({
     name: body.name,
     number: body.number,
@@ -62,9 +58,6 @@ app.post('/api/persons', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
-  if (!body.number) {
-    return response.status(400).send({ error: 'missing number' })
-  }
 
   const person = {
     name: body.name,
@@ -96,7 +89,10 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
+
   next(error)
 }
 app.use(errorHandler)
